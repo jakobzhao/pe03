@@ -27,7 +27,7 @@ bot.get(url)
 csvfile = open("assets/videos.csv", "w", newline='', encoding="utf-8") # mode a, r, w   absoluate path, relative patgh
 
 # All the fields of each data entry that I want to collect.
-fieldnames = ['username', 'user_url', 'title', 'view_num', 'created_at', 'video_url', 'shortdesc', 'collected_at']
+fieldnames = ['username', 'user_url', 'title', 'view_num', 'created_at', 'video_url', 'shortdesc', 'collected_at', 'img_url']
 
 # Create a writer to write the structured data to the csv file.
 writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
@@ -42,7 +42,7 @@ video_urls = []
 # variable i indicates the number of times that scrolls down a web page. In practice, you might want to develop different
 # interaction approach to load and view the web pages.
 
-for i in range(3):
+for i in range(2):
 
     # Create a document object model (DOM) from the raw source of the crawled web page.
     # Since you are processing a html page, 'html.parser' is chosen.
@@ -59,6 +59,7 @@ for i in range(3):
         # I prefer use the "try-except" statement to enable the program run without pausing due to unexecpted errors.
         try:
             video_url = video.find("a", class_="yt-simple-endpoint inline-block style-scope ytd-thumbnail").attrs["href"]
+            img_url = video.find("img", class_="style-scope yt-img-shadow").attrs["src"]
             user_url = video.find("a", class_="yt-simple-endpoint style-scope yt-formatted-string").attrs["href"]
             username = video.find("a", class_="yt-simple-endpoint style-scope yt-formatted-string").text
             title = video.find("yt-formatted-string", class_="style-scope ytd-video-renderer").text
@@ -75,6 +76,7 @@ for i in range(3):
                     'view_num': view_num,
                     'created_at': created_at,
                     'shortdesc': shortdesc,
+                    'img_url': img_url,
                     'collected_at': collected_at}
 
             # if a video has been added to the csvfile, this video would not be inserted to the csv file,
